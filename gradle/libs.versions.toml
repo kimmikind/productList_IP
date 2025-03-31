@@ -13,10 +13,17 @@ materialIconsExtended = "1.7.8"
 room = "2.6.1"
 compose = "1.7.8"
 ksp = "2.0.0-1.0.21"
+junitKtx = "1.2.1"
+roomTesting = "2.6.1"
+rules = "1.6.1"
+runner = "1.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomTesting" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -39,6 +46,7 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 koin-android = { group = "io.insert-koin", name = "koin-android", version = "3.5.3" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

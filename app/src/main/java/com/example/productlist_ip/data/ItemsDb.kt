@@ -1,12 +1,15 @@
 package com.example.productlist_ip.data
 
 import android.content.Context
+import android.util.Log
+import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Database(entities = [Item::class], version = 1, exportSchema = false)
@@ -36,6 +39,7 @@ abstract class ItemsDb : RoomDatabase() {
         private val callback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+                Log.d("Database", "Database created")
                 CoroutineScope(Dispatchers.IO).launch {
                     val itemDao = INSTANCE?.itemDao()
                     if (itemDao != null) {
@@ -52,6 +56,8 @@ abstract class ItemsDb : RoomDatabase() {
                             Item(name = "GoPro Hero 10", time = 1633382400000, tags = "Камера, Эксклюзив", amount = 25)
                         )
                     }
+
+
                 }
             }
         }

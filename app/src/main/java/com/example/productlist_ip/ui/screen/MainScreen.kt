@@ -1,5 +1,6 @@
 package com.example.productlist_ip.ui.screen
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -57,6 +58,10 @@ fun MainScreen(viewModel: ItemViewModel = koinViewModel()) {
     val items by viewModel.items.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
 
+    // Добавим отладочный вывод
+    LaunchedEffect(items) {
+        Log.d("MainScreen", "Current items count: ${items.size}")
+    }
     Scaffold(
         topBar = {
             TopAppBar(

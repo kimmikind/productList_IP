@@ -1,5 +1,6 @@
 package com.example.productlist_ip.data
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -7,12 +8,15 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+
+
 @Dao
 interface ItemDao {
 
     // Просмотр списка всех товаров
     @Query("SELECT * FROM item")
     fun getAllItems(): Flow<List<Item>>
+
 
     // Поиск товаров по названию
     @Query("SELECT * FROM item WHERE name LIKE :searchQuery")
@@ -36,3 +40,5 @@ interface ItemDao {
 
 
 }
+
+

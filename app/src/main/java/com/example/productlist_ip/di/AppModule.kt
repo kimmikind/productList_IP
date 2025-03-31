@@ -1,6 +1,7 @@
 package com.example.productlist_ip.di
 
 
+import com.example.productlist_ip.data.ItemDao
 import com.example.productlist_ip.data.ItemsDb
 import com.example.productlist_ip.viewmodel.ItemViewModel
 import org.koin.android.ext.koin.androidContext
@@ -11,4 +12,5 @@ val appModule = module {
     single { ItemsDb.getDatabase(androidContext()) }
     single { get<ItemsDb>().itemDao() }
     viewModel { ItemViewModel(get()) }
+
 }
