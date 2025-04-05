@@ -48,6 +48,15 @@ fun ItemCard(
     var showEditDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
+    // Обработка тегов - убираем скобки и кавычки
+    val processedTags = remember(item.tags) {
+        item.tags
+            .removeSurrounding("[", "]")  // Удаляем квадратные скобки
+            .split(", ")                  // Разделяем по запятым
+            .map { it.removeSurrounding("\"") } // Удаляем кавычки у каждого тега
+            .filter { it.isNotBlank() }   // Фильтруем пустые теги
+    }
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -55,87 +64,59 @@ fun ItemCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))  // Тень для карточки
-
-
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Название товара и иконки
+            // Заголовок с кнопками (остаётся без изменений)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween  // Выравнивание по краям
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Название товара
                 Text(
                     text = item.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp),
-                    modifier = Modifier.weight(1f)  // Занимает все доступное пространство
+                    modifier = Modifier.weight(1f)
                 )
-
-                // Иконки редактирования и удаления
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.padding(start = 16.dp)
                 ) {
-                    // Иконка редактирования
-                    IconButton(
-                        onClick = { showEditDialog = true },
-                        modifier = Modifier.padding(start = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Редактировать",
-                            tint = Color(0xFF6200EE)
-                        )
+                    IconButton(onClick = { showEditDialog = true }) {
+                        Icon(Icons.Default.Edit, "Редактировать", tint = Color(0xFF6200EE))
                     }
-
-                    // Иконка удаления
-                    IconButton(
-                        onClick = { showDeleteDialog = true },  // Удаляем товар
-                        modifier = Modifier.padding(start = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Удалить",
-                            tint = Color(0xFFD32F2F)
-                        )
+                    IconButton(onClick = { showDeleteDialog = true }) {
+                        Icon(Icons.Default.Delete, "Удалить", tint = Color(0xFFD32F2F))
                     }
                 }
             }
 
-            // Теги (чипсы)
-            val tags = item.tags.split(", ")  // Разбиваем строку на список тегов
-            if (!tags.contains("")) {
+            // Отображаем теги только если они есть
+            if (processedTags.isNotEmpty()) {
                 FlowRow(
                     modifier = Modifier.padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    maxItemsInEachRow = Int.MAX_VALUE  // Не ограничивать количество элементов в строке
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    tags.forEachIndexed { index, tag ->  // Используем индекс как ключ
+                    processedTags.forEach { tag ->
                         Surface(
                             modifier = Modifier
                                 .padding(end = 4.dp)
-                                .border(
-                                    width = 1.dp,
-                                    color = Color.Gray,
-                                    shape = RoundedCornerShape(8.dp)
-                                ),
+                                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
                             color = Color.White,
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Chip(
-                                onClick = {  },
+                                onClick = {},
                                 colors = ChipDefaults.chipColors(
                                     backgroundColor = Color.Transparent,
                                     contentColor = Color.Black
                                 ),
                                 shape = RoundedCornerShape(8.dp),
                                 modifier = Modifier
-                                    .wrapContentSize()  // Минимальная ширина по содержимому
-                                    .height(30.dp)  // Фиксированная высота
+                                    .wrapContentSize()
+                                    .height(30.dp)
                             ) {
                                 Text(
                                     text = tag,
@@ -143,24 +124,22 @@ fun ItemCard(
                                         color = Color.DarkGray,
                                         fontSize = 14.sp
                                     ),
-                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                                    modifier = Modifier.padding(4.dp)
                                 )
                             }
                         }
                     }
                 }
-
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Количество товара и дата добавления
+            // Остальная часть карточки (количество и дата) без изменений
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Блок "На складе"
                 Column {
                     Text(
                         text = "На складе",
@@ -170,15 +149,13 @@ fun ItemCard(
                         )
                     )
                     Text(
-                        text = quantity.toString(),  // Количество товара
+                        text = quantity.toString(),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color.DarkGray
                         ),
-                        modifier = Modifier.padding(top = 2.dp)  // Отступ между текстом и значением
+                        modifier = Modifier.padding(top = 2.dp)
                     )
                 }
-
-                // Блок "Дата добавления"
                 Column {
                     Text(
                         text = "Дата добавления",
@@ -188,7 +165,7 @@ fun ItemCard(
                         )
                     )
                     Text(
-                        text = formatTime(item.time),  // Дата добавления
+                        text = formatTime(item.time),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color.DarkGray
                         ),
